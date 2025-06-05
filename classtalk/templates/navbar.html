@@ -1,0 +1,43 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{{ url_for('main.index') }}">Classtalk</a>
+    <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      {% if g.user %}
+          <a>{{ g.user.username }}님 안녕하세요.</a>
+          <ul class="nav justify-content-end">
+            <li class="nav-item ">
+              <a class="nav-link active" href="{{ url_for('auth.logout') }}">로그아웃</a>
+            </li>
+          </ul>
+      {% else %}
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{{ url_for('auth.signup') }}">회원가입</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('auth.login') }}">로그인</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Disabled</a>
+        </li>
+      </ul>
+      {% endif %}
+      <span class="navbar-text">
+        <nav class="navbar bg-body-tertiary">
+          <div class="container-fluid">
+            <form class="d-flex" role="search">
+            </form>
+          </div>
+        </nav>
+      </span>
+    </div>
+  </div>
+</nav>
