@@ -83,8 +83,10 @@
                       class="form-control"
                       rows="10"></textarea>
         </div>
-        <input type="submit" value="답변 등록" class ="btn btn-primary">
+        <input type="submit" value="답변 등록" class ="btn btn-success">
+        <a href="{{ url_for('question._list') }}" class="btn btn-primary ms-2">질문 목록</a>
     </form>
+
 {% block script %}
 <script type='text/javascript'>
 const delete_elements = document.getElementsByClassName("delete");
