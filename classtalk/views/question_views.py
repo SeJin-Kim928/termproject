@@ -89,3 +89,19 @@ def delete(question_id):
     db.session.commit()
     return redirect(url_for('question._list'))
 
+@bp.route('/answer/delete/<int:answer_id>/')
+@login_required
+def answer_delete(answer_id):
+    answer = Answer.query.get_or_404(answer_id)
+
+    if g.user != answer.user:
+        flash('답변 삭제 권한이 없습니다.', 'danger')
+        return redirect(url_for('question.detail', question_id=answer.question_id))
+
+    question_id = answer.question_id  # 삭제 후 질문 상세 페이지로 돌아가기 위해 미리 저장
+    db.session.delete(answer)
+    db.session.commit()
+
+    flash('답변이 삭제되었습니다.', 'success')
+    return redirect(url_for('question.detail', question_id=question_id))
+
