@@ -41,8 +41,19 @@
                 <span class="text-danger small mx-2">답변 {{ question.answer_set|length }}개</span>
                 {% endif %}
             </td>
-            <td>{{question.user.username}}</td>
-            <td>{{question.create_date}}</td>
+            <! -- 익명 수정 -->
+            <td>
+                {% if question.is_anonymous %}
+                    <span class="text-muted">익명</span>
+                    <td>{{question.create_date}}</td>
+                {% else %}
+                    {{ question.user.username }}
+                    <td>{{question.create_date}}</td>
+                {% endif %}
+            </td>
+
+<!--            <td>{{question.user.username}}</td>-->
+<!--            <td>{{question.create_date}}</td>-->
         </tr>
         {% endfor %}
       </tbody>

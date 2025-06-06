@@ -31,6 +31,10 @@
             <label for="content">내용</label>
             <textarea class="form-control" name="content" id="content" rows="10">{{ form.content.data or '' }}</textarea>
         </div>
+        <div class="mb-3 form-check">
+            {{ form.is_anonymous(class="form-check-input") }}  <!-- ✅ 익명 체크박스 추가 -->
+            {{ form.is_anonymous.label(class="form-check-label") }}
+    </div>
         <button type="submit" class="btn btn-primary">저장하기</button>
     </form>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>

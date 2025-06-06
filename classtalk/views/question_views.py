@@ -4,7 +4,7 @@ from classtalk.forms import QuestionForm, AnswerForm
 from werkzeug.utils import redirect
 from datetime import datetime
 # from flask import flash #로그인 관련
-# from flask_login import login_required, current_user
+from flask_login import login_required, current_user
 from .. import db
 from classtalk.views.auth_views import login_required
 
@@ -52,6 +52,8 @@ def create():
         question = Question(
             subject=form.subject.data,
             content=form.content.data,
+            is_anonymous=form.is_anonymous.data,  # 익명 여부 저장
+            user_id=None if form.is_anonymous.data else current_user.id,  # 익명 처리
             create_date=datetime.now(), user=g.user)
         db.session.add(question)
         db.session.commit()
@@ -86,3 +88,4 @@ def delete(question_id):
     db.session.delete(question)
     db.session.commit()
     return redirect(url_for('question._list'))
+

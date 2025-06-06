@@ -5,6 +5,7 @@ from wtforms.validators import DataRequired, Length, EqualTo, Email
 class QuestionForm(FlaskForm):
     subject = StringField('제목', validators=[DataRequired('제목은 필수입력 항목입니다.')])
     content = TextAreaField('내용', validators=[DataRequired('내용은 필수입력 항목입니다.')])
+    is_anonymous = BooleanField('익명으로 작성하기')  # 익명 여부 체크박스
     submit = SubmitField('질문 등록') #제출 버튼
 
 class AnswerForm(FlaskForm):

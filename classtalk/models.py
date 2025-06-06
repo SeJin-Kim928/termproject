@@ -11,6 +11,7 @@ class Question(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
     user = db.relationship('User', backref=db.backref('question_set'))
     modify_date = db.Column(db.DateTime(), nullable=True)
+    is_anonymous = db.Column(db.Boolean, default=False)  # 익명 여부 추가
 
 class Answer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
