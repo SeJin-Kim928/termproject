@@ -3,7 +3,8 @@
     <!-- 이전페이지 -->
     {% if question_list.has_prev %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ question_list.prev_num }}">이전</a>
+<!--            <a class="page-link" href="?page={{ question_list.prev_num }}">이전</a>-->
+            <a class="page-link" data-page="{{ question_list.prev_num }}" href="javascript:void(0)">이전</a>
         </li>
     {% else %}
         <li class="page-item disabled">
@@ -14,7 +15,9 @@
     <!-- iter_pages() -->
       {% for page_num in question_list.iter_pages() %}
         {% if page_num %}
-          <li class="page-item"><a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a></li>
+          <li class="page-item">
+<!--              <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a></li>-->
+            <a class="page-link" data-page="{{ question_list.next_num }}" href="javascript:void(0)">{{ page_num }}</a>
         {% else %}
           <li class="disabled"><a class="page-link" href="#">...</a></li>
         {% endif %}
@@ -23,7 +26,8 @@
     <!-- 다음페이지 -->
     {% if question_list.has_next %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ question_list.next_num }}">다음</a>
+<!--            <a class="page-link" href="?page={{ question_list.next_num }}">다음</a>-->
+            <a class="page-link" data-page="{{ question_list.next_num }}" href="javascript:void(0)">다음</a>
         </li>
     {% else %}
         <li class="page-item disabled">

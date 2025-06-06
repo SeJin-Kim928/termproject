@@ -16,8 +16,8 @@
             </div>
             <div class="col-6">
                 <div class="input-group">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-                    <button class="btn btn-outline-success" type="submit">Search</button>
+                    <input type="text" id="search_kw" class="form-control me-2" value="{{ kw or '' }}" placeholder="Search" aria-label="Search"/>
+                    <button class="btn btn-outline-success" type="submit" id="btn_search">Search</button>
                 </div>
             </div>
         </div>
@@ -53,7 +53,38 @@
 
     {% include "Pagenation.html" %}
 </div>
+{% block script %}
+<script type='text/javascript'>
+const page_elements = document.getElementsByClassName("page-link");
+Array.from(page_elements).forEach(function(element) {
+    element.addEventListener('click', function() {
+        document.getElementById('page').value = this.dataset.page;
+        document.getElementById('searchForm').submit();
+    });
+});
+const searchInput = document.getElementById("search_kw");
+const btn_search = document.getElementById("btn_search");
 
+btn_search.addEventListener('click', function() {
+    document.getElementById('kw').value = document.getElementById('search_kw').value;
+    document.getElementById('page').value = 1;  // 검색버튼을 클릭할 경우 1페이지부터 조회한다.
+    document.getElementById('searchForm').submit();
+});
+searchInput.addEventListener('keydown', function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        document.getElementById('kw').value = searchInput.value;
+        document.getElementById('page').value = 1;
+        document.getElementById('searchForm').submit();
+    }
+});
+</script>
+{% endblock %}
+
+<form id="searchForm" method="get" action="{{ url_for('question._list') }}">
+    <input type="hidden" id="kw" name="kw" value="{{ kw or '' }}">
+    <input type="hidden" id="page" name="page" value="{{ page }}">
+</form>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.min.js" integrity="sha384-VQqxDN0EQCkWoxt/0vsQvZswzTHUVOImccYmSyhJTp7kGtPed0Qcx8rK9h9YEgx+" crossorigin="anonymous"></script>
 </body>
