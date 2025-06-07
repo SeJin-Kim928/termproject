@@ -26,7 +26,15 @@
             <div class="card-text">
                 내용: {{ question.content }}
             </div>
-            <div class="d-flex justify-content-end">
+            <div class="card-body badge d-flex justify-content-end">
+            <div class="bg-light text-dark p-2 text-start mx-3">
+                <!-- ✅ 질문 작성자의 익명 여부 확인 -->
+                {% if question.is_anonymous %}
+                    <div> 작성자: <span class="text-muted">익명</span></div>  <!-- 익명 표시 -->
+                {% else %}
+                    <div> 작성자: {{ question.user.username }}</div>  <!-- 일반 사용자 이름 표시 -->
+                {% endif %}
+                <!-- ✅ 수정 여부에 따른 작성일 또는 수정일 표시 -->
                 {% if question.modify_date %}
                 <div class="badge bg-light text-dark p-2 text-start mx-3">
                 <div class="mb-2">수정: {{ question.modify_date }}</div>
