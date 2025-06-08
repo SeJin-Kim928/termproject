@@ -1,21 +1,13 @@
 from flask import Blueprint, render_template, request, redirect, url_for, g, flash
+from wtforms.validators import none_of
 from classtalk.models import Question, Answer, User
 from classtalk.forms import QuestionForm, AnswerForm
 from werkzeug.utils import redirect
 from datetime import datetime
-# from flask import flash #로그인 관련
-from flask_login import login_required, current_user
-from .. import db
+from classtalk import db
 from classtalk.views.auth_views import login_required
 
 bp = Blueprint('question', __name__, url_prefix='/question')
-
-# @bp.route('/list')
-# def _list():
-#     page = request.args.get('page', type=int, default=1)  # 페이지
-#     question_list = Question.query.order_by(Question.create_date.desc())
-#     q_list = question_list.paginate(page=page, per_page=10)
-#     return render_template('question/question_list.html', question_list=q_list)
 
 @bp.route('/list/')
 def _list():
@@ -32,12 +24,12 @@ def _list():
             .filter(Question.subject.ilike(search) |  # 질문제목
                     Question.content.ilike(search) |  # 질문내용
                     User.username.ilike(search) |  # 질문작성자
-                    sub_query.c.content.ilike(search) |  # 답변내용
                     sub_query.c.username.ilike(search)  # 답변작성자
                     ) \
             .distinct()
     question_list = question_list.paginate(page=page, per_page=10)
     return render_template('question/question_list.html', question_list=question_list, page=page, kw=kw)
+
 @bp.route('/detail/<int:question_id>/')
 def detail(question_id):
     form = AnswerForm()
@@ -53,10 +45,11 @@ def create():
             subject=form.subject.data,
             content=form.content.data,
             is_anonymous=form.is_anonymous.data,  # 익명 여부 저장
-            user_id=None if form.is_anonymous.data else current_user.id,  # 익명 처리
+            user_id=None if form.is_anonymous.data else g.user.id,  # 익명 처리
             create_date=datetime.now(), user=g.user)
         db.session.add(question)
         db.session.commit()
+        flash('답변이 등록되었습니다!', 'success')
         return redirect(url_for('main.index'))
     return render_template('question/question_form.html', form=form)
 
@@ -105,3 +98,20 @@ def answer_delete(answer_id):
     flash('답변이 삭제되었습니다.', 'success')
     return redirect(url_for('question.detail', question_id=question_id))
 
+@bp.route('/answer/create/<int:question_id>/', methods=('POST',))
+@login_required
+def answer_create(question_id):
+    form = AnswerForm()
+    if form.validate_on_submit():
+        answer = Answer(
+            question_id=question_id,
+            content=form.content.data,
+            is_anonymous=bool(form.is_anonymous.data),  # ✅ 익명 여부 저장
+            user_id=None if form.is_anonymous.data else g.user.id,  # ✅ 익명 처리 (문제 발생)
+            create_date=datetime.now(), user=g.user
+
+        )
+    db.session.add(answer)
+    db.session.commit()
+    flash('답변이 등록되었습니다!', 'success')
+    return redirect(url_for('question.detail', question_id=question_id))
